@@ -1,20 +1,23 @@
 package com.example.SpringStarterDemo.Controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.SpringStarterDemo.DAO.StudentDAO;
+import com.example.SpringStarterDemo.DAO.StudentDAOImpl;
+import com.example.SpringStarterDemo.Entity.Course;
 import com.example.SpringStarterDemo.Entity.Student;
 
 @RestController
 public class SpringDemoController {
 
+	
 	@Autowired
-	 private StudentDAO studentDAO;
+	private StudentDAOImpl studentDAOImpl;
+	
 	
 	@RequestMapping("/")
 	public String getHello() {
@@ -22,23 +25,22 @@ public class SpringDemoController {
 	}
 	
 	
-	@RequestMapping("/Students")
-	public String getStudents() {
+	@RequestMapping("/GetStudents")
+	public List<Student> getStudentsList() {
 		
-		StringBuffer sb =new StringBuffer();
+		List<Student> studentsList = studentDAOImpl.getStudents();
 		
-		sb.append(" List Of Students ");
-		sb.append("\n");
+		 return studentsList;
+	
+	}
+	
+	@RequestMapping("/Student/{id}/courses")
+	public List<Course> getCourseList(@PathVariable(value="id") Long studentId) {
 		
-		Iterable<Student> list = studentDAO.findAll();
+		List<Course> courseList = studentDAOImpl.getCourses(studentId);
 		
-		for(Student s : list) {
-			
-			sb.append(s.toString());
-			sb.append("\n");
-		}
-		
-		return sb.toString();
+		 return courseList;
+	
 	}
 	
 }
